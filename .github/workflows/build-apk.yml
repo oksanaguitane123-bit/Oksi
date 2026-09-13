@@ -1,0 +1,40 @@
+name: Build Arizona Mobile APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Unpack launcher
+        run: |
+          mkdir project
+          unzip -q ArizonaMobileLauncher_GitHub_APK.zip -d project
+          find project -maxdepth 2 -type f | head -50
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK
+        working-directory: project/ArizonaMobileLauncher
+        run: |
+          gradle wrapper --gradle-version 8.7
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArizonaMobileLauncher-APK
+          path: project/ArizonaMobileLauncher/app/build/outputs/apk/debug/app-debug.apk
