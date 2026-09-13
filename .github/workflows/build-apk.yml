@@ -14,7 +14,7 @@ jobs:
       - name: Unpack launcher
         run: |
           mkdir project
-          unzip -q ArizonaMobileLauncher_GitHub_APK.zip -d project
+          unzip -q ArizonaMobileLauncher_FINAL.zip -d project
           find project -maxdepth 2 -type f | head -50
 
       - name: Set up JDK
